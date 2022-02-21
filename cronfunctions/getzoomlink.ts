@@ -3,6 +3,7 @@ import {
   ClientExtensionInterface
 } from "../types"
 const getzoomlink = async(client:ClientExtensionInterface) => {
+  console.log("Cron Job: getzoomlink")
   const guildid = process.env.GUILD_ID as string
   const guild = client.guilds.cache.get(guildid)
   if(!guild) return

@@ -5,6 +5,7 @@ let state = false;
 import axios, { AxiosResponse } from "axios"
 import { GuildScheduledEvent } from "discord.js"
 const createschedule = async (client: ClientExtensionInterface) => {
+  console.log("Cron Job: createschedule")
   if(state) return
   state = true
   const guild = client.guilds.cache.get(process.env.GUILD_ID as string)
