@@ -39,7 +39,7 @@ const createschedule = async (client) => {
             const startHour = parseInt(start.split("T")[1].split(":")[0]) - 7;
             const startMinute = start.split("T")[1].split(":")[1];
             const startSecond = start.split("T")[1].split(":")[2];
-            const endHour = parseInt(end.split("T")[1].split(":")[0]) - 7;
+            const endHour = end.split("T")[1].split(":")[0] - 7;
             const endMinute = end.split("T")[1].split(":")[1];
             const endSecond = end.split("T")[1].split(":")[2];
             const startTime = `${startHour}:${startMinute}:${startSecond}`;
@@ -48,6 +48,7 @@ const createschedule = async (client) => {
             const endDate = end.split("T")[0];
             const startDateTime = `${startDate}T${startTime}`;
             const endDateTime = `${endDate}T${endTime}`;
+            console.log(startDateTime, endDateTime);
             const content = schedule.content;
             const deliveryMode = schedule.deliveryModeDesc;
             const location = schedule.location;
