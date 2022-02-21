@@ -7,10 +7,11 @@ exports.client = void 0;
 const discord_js_1 = require("discord.js");
 require("dotenv/config");
 const node_cron_1 = __importDefault(require("node-cron"));
-// import ClientAPI from "./unsused/ClientAPI"
+const createschedule_1 = __importDefault(require("./cronfunctions/createschedule"));
+const getzoomlink_1 = __importDefault(require("./cronfunctions/getzoomlink"));
 const fs_1 = __importDefault(require("fs"));
 console.clear();
-if (!process.env.TOKEN || !process.env.PREFIX || !process.env.BINUS_TOKEN || !process.env.BINUS_ROLEID) {
+if (!process.env.TOKEN || !process.env.PREFIX || !process.env.BINUS_TOKEN || !process.env.BINUS_ROLEID || !process.env.GUILD_ID) {
     console.error("Environmental variable for TOKEN, PREFIX, and URI is needed.");
     process.exit(1);
 }
@@ -67,14 +68,13 @@ for (const eventFile of subEventFolder) {
     client.EventCollection.set(event.name, event);
     client.on(event.eventName, (...args) => { event.execute(...args, client); });
 }
-const createschedule_1 = __importDefault(require("./cronfunctions/createschedule"));
-const getzoomlink_1 = __importDefault(require("./cronfunctions/getzoomlink"));
 //Login the bot
 client.login(TOKEN).then((data) => {
     if (data)
         console.log("Login Successful");
     else
         console.log("Failed login");
+    //Initialize cron jobs
     node_cron_1.default.schedule("0 0 0 1 * *", function () {
         (0, createschedule_1.default)(client);
     });

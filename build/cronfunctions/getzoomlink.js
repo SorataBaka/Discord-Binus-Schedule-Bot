@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
 const getzoomlink = async (client) => {
+    console.log("Cron Job: getzoomlink");
     const guildid = process.env.GUILD_ID;
     const guild = client.guilds.cache.get(guildid);
     if (!guild)
@@ -37,10 +38,10 @@ const getzoomlink = async (client) => {
         if (classSchedule[0] === undefined)
             continue;
         const zoomLink = classSchedule[0].joinUrl;
-        console.log(`${schedule[1].name} - ${zoomLink}`);
         if (zoomLink === undefined)
             continue;
-        schedule[1].setLocation(zoomLink);
+        console.log(`${schedule[1].name} - ${zoomLink}`);
+        await schedule[1].setLocation(zoomLink).catch();
     }
 };
 exports.default = getzoomlink;

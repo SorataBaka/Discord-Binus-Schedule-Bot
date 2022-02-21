@@ -2,10 +2,12 @@ import { Client, Intents, Collection, GuildMember } from "discord.js"
 import { Command, Events, ClientExtensionInterface } from "./types"
 import "dotenv/config"
 import cron from "node-cron"
-// import ClientAPI from "./unsused/ClientAPI"
+import createSchedule from "./cronfunctions/createschedule"
+import getzoomlink from "./cronfunctions/getzoomlink"
 import fs from "fs"
 console.clear()
-if(!process.env.TOKEN || !process.env.PREFIX || !process.env.BINUS_TOKEN || !process.env.BINUS_ROLEID ) {
+
+if(!process.env.TOKEN || !process.env.PREFIX || !process.env.BINUS_TOKEN || !process.env.BINUS_ROLEID || !process.env.GUILD_ID ) {
     console.error("Environmental variable for TOKEN, PREFIX, and URI is needed.")
     process.exit(1)
 }
@@ -64,12 +66,12 @@ for(const eventFile of subEventFolder){
   client.on(event.eventName, (...args:any) => {event.execute(...args, client)})
 }
 
-import createSchedule from "./cronfunctions/createschedule"
-import getzoomlink from "./cronfunctions/getzoomlink"
 //Login the bot
 client.login(TOKEN).then((data:any) => {
   if(data) console.log("Login Successful")
   else console.log("Failed login")
+
+  //Initialize cron jobs
   cron.schedule("0 0 0 1 * *", function(){
     createSchedule(client)
   })

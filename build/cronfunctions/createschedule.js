@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 let state = false;
 const axios_1 = __importDefault(require("axios"));
 const createschedule = async (client) => {
+    console.log("Cron Job: createschedule");
     if (state)
         return;
     state = true;
@@ -36,10 +37,10 @@ const createschedule = async (client) => {
             //Verify if this schedule already exists
             const start = schedule.dateStart;
             const end = schedule.dateEnd;
-            const startHour = parseInt(start.split("T")[1].split(":")[0]) - 7;
+            const startHour = ("0" + (parseInt(start.split("T")[1].split(":")[0]) - 7)).slice(-2);
             const startMinute = start.split("T")[1].split(":")[1];
             const startSecond = start.split("T")[1].split(":")[2];
-            const endHour = end.split("T")[1].split(":")[0] - 7;
+            const endHour = ("0" + (parseInt(end.split("T")[1].split(":")[0]) - 7)).slice(-2);
             const endMinute = end.split("T")[1].split(":")[1];
             const endSecond = end.split("T")[1].split(":")[2];
             const startTime = `${startHour}:${startMinute}:${startSecond}`;
@@ -48,7 +49,6 @@ const createschedule = async (client) => {
             const endDate = end.split("T")[0];
             const startDateTime = `${startDate}T${startTime}`;
             const endDateTime = `${endDate}T${endTime}`;
-            console.log(startDateTime, endDateTime);
             const content = schedule.content;
             const deliveryMode = schedule.deliveryModeDesc;
             const location = schedule.location;

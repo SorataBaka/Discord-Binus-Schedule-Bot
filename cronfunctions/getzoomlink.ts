@@ -32,9 +32,9 @@ const getzoomlink = async(client:ClientExtensionInterface) => {
     })
     if(classSchedule[0] === undefined) continue
     const zoomLink = classSchedule[0].joinUrl
-    console.log(`${schedule[1].name} - ${zoomLink}`)
     if(zoomLink === undefined) continue
-    schedule[1].setLocation(zoomLink)
+    console.log(`${schedule[1].name} - ${zoomLink}`)
+    await schedule[1].setLocation(zoomLink).catch()
   }
 }
 export default getzoomlink
