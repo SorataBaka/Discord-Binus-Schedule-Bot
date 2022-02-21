@@ -34,8 +34,20 @@ const createschedule = async (client) => {
     for (const days of schedule.data) {
         for (const schedule of days.Schedule) {
             //Verify if this schedule already exists
-            const dateStart = schedule.dateStart;
-            const dateEnd = schedule.dateEnd;
+            const start = schedule.dateStart;
+            const end = schedule.dateEnd;
+            const startHour = parseInt(start.split("T")[1].split(":")[0]) - 7;
+            const startMinute = start.split("T")[1].split(":")[1];
+            const startSecond = start.split("T")[1].split(":")[2];
+            const endHour = parseInt(end.split("T")[1].split(":")[0]) - 7;
+            const endMinute = end.split("T")[1].split(":")[1];
+            const endSecond = end.split("T")[1].split(":")[2];
+            const startTime = `${startHour}:${startMinute}:${startSecond}`;
+            const endTime = `${endHour}:${endMinute}:${endSecond}`;
+            const startDate = start.split("T")[0];
+            const endDate = end.split("T")[0];
+            const startDateTime = `${startDate}T${startTime}`;
+            const endDateTime = `${endDate}T${endTime}`;
             const content = schedule.content;
             const deliveryMode = schedule.deliveryModeDesc;
             const location = schedule.location;
@@ -51,8 +63,8 @@ const createschedule = async (client) => {
             else {
                 const newSchedule = await guild?.scheduledEvents.create({
                     name: `${content} - Session ${session}`,
-                    scheduledStartTime: dateStart,
-                    scheduledEndTime: dateEnd,
+                    scheduledStartTime: startDateTime,
+                    scheduledEndTime: endDateTime,
                     privacyLevel: "GUILD_ONLY",
                     description: `${content} \n ${deliveryMode} \n ${location === null ? "No location" : location} \n ID: ${classId}`,
                     entityType: "EXTERNAL",
