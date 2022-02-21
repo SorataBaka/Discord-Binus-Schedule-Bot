@@ -40,23 +40,31 @@ module.exports = {
                 const deliveryMode = schedule.deliveryModeDesc;
                 const location = schedule.location;
                 const session = schedule.customParam.sessionNumber;
+                //Check if the schedule already exists by matching the name 
                 const scheduleExists = message.guild?.scheduledEvents.cache.filter((value, key) => {
                     return value.name === `${content} - Session ${session}`;
                 }).first();
                 if (scheduleExists !== undefined) {
-                    continue;
+                    message.channel.send(`Schedule ${content} - Session ${session} already exists`);
+                    console.log(`${content} - Session ${session} already exists`);
                 }
-                await message.guild?.scheduledEvents.create({
-                    name: `${content} - Session ${session}`,
-                    scheduledStartTime: dateStart,
-                    scheduledEndTime: dateEnd,
-                    privacyLevel: "GUILD_ONLY",
-                    description: `${content} \n ${deliveryMode} \n ${location === null ? "No location" : location}`,
-                    entityType: "EXTERNAL",
-                    entityMetadata: {
-                        location: location === null ? "No location" : location,
-                    },
-                });
+                else {
+                    const newSchedule = await message.guild?.scheduledEvents.create({
+                        name: `${content} - Session ${session}`,
+                        scheduledStartTime: dateStart,
+                        scheduledEndTime: dateEnd,
+                        privacyLevel: "GUILD_ONLY",
+                        description: `${content} \n ${deliveryMode} \n ${location === null ? "No location" : location}`,
+                        entityType: "EXTERNAL",
+                        entityMetadata: {
+                            location: location === null ? "No location" : location,
+                        },
+                    }).catch((err) => { return undefined; });
+                    if (newSchedule !== undefined) {
+                        console.log(`${content} - Session ${session}`);
+                        await message.channel.send(`${newSchedule?.name} has been created`).catch();
+                    }
+                }
             }
         }
         return message.reply("Schedule has been parsed!");

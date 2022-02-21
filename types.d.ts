@@ -18,6 +18,7 @@ export interface ClientExtensionInterface extends Client{
   MessageCommands:Collection<string, Command>
   MessageCommandGroups:Collection<string, Collection<string, Command>>
   EventCollection:Collection<string, Events>
+  activeCommands:Collection<string, GuildMember>
   PREFIX:string
   alertChannel:string
   JWTToken:string

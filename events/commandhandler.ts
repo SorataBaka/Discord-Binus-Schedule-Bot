@@ -1,4 +1,4 @@
-import { Message } from 'discord.js';
+import { Message, GuildMember } from 'discord.js';
 import { Command, ClientExtensionInterface } from '../types';
 module.exports = {
   name: "commandhandler",
@@ -21,6 +21,9 @@ module.exports = {
     if(command.args == "single"){
       args = args.join(" ")
     }
+    if(client.activeCommands.has(message.author.id)) return message.reply("You are already running a command!")
+    client.activeCommands.set(message.author.id, message.member as GuildMember)
     await command.execute(message, args, client).catch()
+    return client.activeCommands.delete(message.author.id)
   }
 }

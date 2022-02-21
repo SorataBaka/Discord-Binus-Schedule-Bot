@@ -18,7 +18,7 @@ if (!process.env.TOKEN || !process.env.PREFIX || !process.env.BINUS_TOKEN || !pr
 const TOKEN = process.env.TOKEN;
 //Set bot intents
 const intents = new discord_js_1.Intents();
-intents.add(discord_js_1.Intents.FLAGS.GUILDS, discord_js_1.Intents.FLAGS.GUILD_MESSAGES, discord_js_1.Intents.FLAGS.GUILD_MEMBERS, discord_js_1.Intents.FLAGS.GUILD_PRESENCES, discord_js_1.Intents.FLAGS.GUILD_VOICE_STATES, discord_js_1.Intents.FLAGS.GUILD_MESSAGE_TYPING);
+intents.add(discord_js_1.Intents.FLAGS.GUILDS, discord_js_1.Intents.FLAGS.GUILD_MESSAGES, discord_js_1.Intents.FLAGS.GUILD_MEMBERS, discord_js_1.Intents.FLAGS.GUILD_PRESENCES, discord_js_1.Intents.FLAGS.GUILD_VOICE_STATES, discord_js_1.Intents.FLAGS.GUILD_MESSAGE_TYPING, discord_js_1.Intents.FLAGS.GUILD_SCHEDULED_EVENTS);
 //Create new client
 class ClientExtension extends discord_js_1.Client {
     MessageCommands;
@@ -29,6 +29,7 @@ class ClientExtension extends discord_js_1.Client {
     JWTToken = process.env.BINUS_TOKEN;
     alertChannel = process.env.ALERT_CHANNEL;
     roleID = process.env.BINUS_ROLEID;
+    activeCommands = new discord_js_1.Collection();
     constructor(intents) {
         super({ intents: intents });
         this.MessageCommands = new discord_js_1.Collection();
@@ -67,22 +68,23 @@ for (const eventFile of subEventFolder) {
     client.EventCollection.set(event.name, event);
     client.on(event.eventName, (...args) => { event.execute(...args, client); });
 }
+const createschedule_1 = __importDefault(require("./cronfunctions/createschedule"));
 //Login the bot
 client.login(TOKEN).then((data) => {
     if (data)
         console.log("Login Successful");
     else
         console.log("Failed login");
+    node_cron_1.default.schedule("0 0 0 1 * *", function () {
+        (0, createschedule_1.default)(client);
+    });
+    (0, createschedule_1.default)(client);
 }).catch((error) => {
     console.log(`Attempted login with token ${TOKEN} Failed`);
     console.error(error);
     client.destroy();
     console.log("Shutting down");
     process.exit(1);
-});
-const createschedule_1 = __importDefault(require("./cronfunctions/createschedule"));
-node_cron_1.default.schedule("0 0 12 1 * ?", function () {
-    (0, createschedule_1.default)(client);
 });
 process.on("SIGINT" || "SIGTERM", () => {
     console.log("Shutting down");

@@ -1,4 +1,4 @@
-import { Client, Intents, Collection } from "discord.js"
+import { Client, Intents, Collection, GuildMember } from "discord.js"
 import { Command, Events, ClientExtensionInterface } from "./types"
 import "dotenv/config"
 import cron from "node-cron"
@@ -15,7 +15,7 @@ const TOKEN = process.env.TOKEN as string
 
 //Set bot intents
 const intents:Intents = new Intents()
-intents.add(Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_PRESENCES, Intents.FLAGS.GUILD_VOICE_STATES, Intents.FLAGS.GUILD_MESSAGE_TYPING)
+intents.add(Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_PRESENCES, Intents.FLAGS.GUILD_VOICE_STATES, Intents.FLAGS.GUILD_MESSAGE_TYPING, Intents.FLAGS.GUILD_SCHEDULED_EVENTS)
 
 //Create new client
 export default class ClientExtension extends Client implements ClientExtensionInterface{
@@ -27,6 +27,7 @@ export default class ClientExtension extends Client implements ClientExtensionIn
   public JWTToken = process.env.BINUS_TOKEN as string
   public alertChannel = process.env.ALERT_CHANNEL as string
   public roleID = process.env.BINUS_ROLEID as string
+  public activeCommands = new Collection<string, GuildMember>()
   public constructor(intents:Intents) {
       super({ intents: intents })
       this.MessageCommands = new Collection()
@@ -64,10 +65,15 @@ for(const eventFile of subEventFolder){
   client.on(event.eventName, (...args:any) => {event.execute(...args, client)})
 }
 
+import createSchedule from "./cronfunctions/createschedule"
 //Login the bot
 client.login(TOKEN).then((data:any) => {
   if(data) console.log("Login Successful")
   else console.log("Failed login")
+  cron.schedule("0 0 0 1 * *", function(){
+    createSchedule(client)
+  })
+  createSchedule(client)
 }).catch((error:Error) => {
   console.log(`Attempted login with token ${TOKEN} Failed`)
   console.error(error)
@@ -76,11 +82,6 @@ client.login(TOKEN).then((data:any) => {
   process.exit(1)
 })
 export { client }
-
-import createSchedule from "./cronfunctions/createschedule"
-cron.schedule("0 0 12 1 * ?", function(){
-  createSchedule(client)
-})
 process.on("SIGINT" || "SIGTERM", () => {
   console.log("Shutting down")
   client.destroy()
