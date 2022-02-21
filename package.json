@@ -1,0 +1,35 @@
+{
+  "name": "discord-binus-schedule-bot",
+  "version": "0.1.0",
+  "description": "A discord bot that integrates Bina Nusantara University Schedules to guild events",
+  "main": "./build/index.js",
+  "scripts": {
+    "start": "tsc && node build/index.js",
+    "build": "tsc",
+    "dev": "tsc -w && nodemon --exec node ./build/index.js"
+  },
+  "keywords": [
+    "discord",
+    "binus",
+    "bot",
+    "discordjs",
+    "nodejs",
+    "javascript"
+  ],
+  "author": "Christian Harjuno (SorataBaka)",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.26.0",
+    "axios-cookiejar-support": "^2.0.3",
+    "discord.js": "^13.6.0",
+    "dotenv": "^16.0.0",
+    "fs": "^0.0.1-security",
+    "node-cron": "^3.0.0",
+    "tough-cookie": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node-cron": "^3.0.1",
+    "nodemon": "^1.18.4",
+    "typescript": "^3.7.5"
+  }
+}
