@@ -46,7 +46,6 @@ const createschedule = async (client: ClientExtensionInterface) => {
       const startDateTime = `${startDate}T${startTime}`;
       const endDateTime = `${endDate}T${endTime}`;
 
-      console.log(startDateTime, endDateTime)
 
       const content = schedule.content
       const deliveryMode = schedule.deliveryModeDesc
