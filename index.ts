@@ -25,7 +25,6 @@ export default class ClientExtension extends Client implements ClientExtensionIn
   // public ClientAPI:ClientAPIInterface
   public PREFIX = process.env.PREFIX as string
   public JWTToken = process.env.BINUS_TOKEN as string
-  public alertChannel = process.env.ALERT_CHANNEL as string
   public roleID = process.env.BINUS_ROLEID as string
   public activeCommands = new Collection<string, GuildMember>()
   public constructor(intents:Intents) {
@@ -66,6 +65,7 @@ for(const eventFile of subEventFolder){
 }
 
 import createSchedule from "./cronfunctions/createschedule"
+import getzoomlink from "./cronfunctions/getzoomlink"
 //Login the bot
 client.login(TOKEN).then((data:any) => {
   if(data) console.log("Login Successful")
@@ -73,6 +73,11 @@ client.login(TOKEN).then((data:any) => {
   cron.schedule("0 0 0 1 * *", function(){
     createSchedule(client)
   })
+  cron.schedule("*/10 * * * *", function(){
+    getzoomlink(client)
+  })
+  
+  getzoomlink(client)
   createSchedule(client)
 }).catch((error:Error) => {
   console.log(`Attempted login with token ${TOKEN} Failed`)

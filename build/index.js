@@ -27,7 +27,6 @@ class ClientExtension extends discord_js_1.Client {
     // public ClientAPI:ClientAPIInterface
     PREFIX = process.env.PREFIX;
     JWTToken = process.env.BINUS_TOKEN;
-    alertChannel = process.env.ALERT_CHANNEL;
     roleID = process.env.BINUS_ROLEID;
     activeCommands = new discord_js_1.Collection();
     constructor(intents) {
@@ -69,6 +68,7 @@ for (const eventFile of subEventFolder) {
     client.on(event.eventName, (...args) => { event.execute(...args, client); });
 }
 const createschedule_1 = __importDefault(require("./cronfunctions/createschedule"));
+const getzoomlink_1 = __importDefault(require("./cronfunctions/getzoomlink"));
 //Login the bot
 client.login(TOKEN).then((data) => {
     if (data)
@@ -78,6 +78,10 @@ client.login(TOKEN).then((data) => {
     node_cron_1.default.schedule("0 0 0 1 * *", function () {
         (0, createschedule_1.default)(client);
     });
+    node_cron_1.default.schedule("*/10 * * * *", function () {
+        (0, getzoomlink_1.default)(client);
+    });
+    (0, getzoomlink_1.default)(client);
     (0, createschedule_1.default)(client);
 }).catch((error) => {
     console.log(`Attempted login with token ${TOKEN} Failed`);

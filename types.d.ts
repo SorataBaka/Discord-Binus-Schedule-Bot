@@ -20,7 +20,6 @@ export interface ClientExtensionInterface extends Client{
   EventCollection:Collection<string, Events>
   activeCommands:Collection<string, GuildMember>
   PREFIX:string
-  alertChannel:string
   JWTToken:string
   roleID:string
 }

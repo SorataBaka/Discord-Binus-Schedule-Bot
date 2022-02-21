@@ -40,6 +40,7 @@ module.exports = {
                 const deliveryMode = schedule.deliveryModeDesc;
                 const location = schedule.location;
                 const session = schedule.customParam.sessionNumber;
+                const classId = schedule.customParam.classId;
                 //Check if the schedule already exists by matching the name 
                 const scheduleExists = message.guild?.scheduledEvents.cache.filter((value, key) => {
                     return value.name === `${content} - Session ${session}`;
@@ -54,7 +55,7 @@ module.exports = {
                         scheduledStartTime: dateStart,
                         scheduledEndTime: dateEnd,
                         privacyLevel: "GUILD_ONLY",
-                        description: `${content} \n ${deliveryMode} \n ${location === null ? "No location" : location}`,
+                        description: `${content} \n ${deliveryMode} \n ${location === null ? "No location" : location} \n ID: ${classId}`,
                         entityType: "EXTERNAL",
                         entityMetadata: {
                             location: location === null ? "No location" : location,
