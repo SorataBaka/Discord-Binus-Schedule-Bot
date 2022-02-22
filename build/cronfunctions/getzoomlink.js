@@ -12,7 +12,7 @@ const getzoomlink = async (client) => {
         return;
     const ongoing = await axios_1.default.request({
         method: "GET",
-        url: "https://apim-bm7-prod.azure-api.net/func-bm7-course-prod/ClassSession/Ongoing/student",
+        url: "https://apim-bm7-prod.azure-api.net/func-bm7-course-prod/ClassSession/Upcoming/student",
         headers: {
             "Authorization": client.JWTToken,
             "roleName": "Student",
@@ -26,18 +26,20 @@ const getzoomlink = async (client) => {
     });
     if (ongoing === undefined)
         return console.log("Error getting ongoing classes");
-    const schedules = await guild.scheduledEvents.cache;
+    const schedules = guild.scheduledEvents.cache;
     for (const schedule of schedules) {
         const description = schedule[1].description;
+        if (description === null)
+            continue;
         const classId = description.split("ID: ")[1];
         if (classId === undefined)
             continue;
-        const classSchedule = ongoing.data.data.filter((value) => {
-            return value.classId === classId;
-        });
-        if (classSchedule[0] === undefined)
+        const classSchedule = ongoing.data;
+        if (classSchedule === undefined)
             continue;
-        const zoomLink = classSchedule[0].joinUrl;
+        if (classSchedule.classId !== classId)
+            continue;
+        const zoomLink = classSchedule.joinUrl;
         if (zoomLink === undefined)
             continue;
         console.log(`${schedule[1].name} - ${zoomLink}`);
